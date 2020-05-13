@@ -2,6 +2,8 @@ package guru.springframework.msscbrewery.web.controller;
 
 import guru.springframework.msscbrewery.services.CustomerService;
 import guru.springframework.msscbrewery.web.model.CustomerDto;
+import lombok.RequiredArgsConstructor;
+import lombok.val;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,13 +14,10 @@ import java.util.UUID;
 
 @RequestMapping("/api/v1/customer")
 @RestController
+@RequiredArgsConstructor
 public class CustomerController {
 
     private final CustomerService customerService;
-
-    public CustomerController(CustomerService customerService) {
-        this.customerService = customerService;
-    }
 
     @GetMapping("/{customerId}")
     public ResponseEntity geCustomer(@PathVariable("customerId") UUID customerId){
@@ -27,8 +26,8 @@ public class CustomerController {
 
     @PostMapping
     public ResponseEntity saveCustomer(@Valid @RequestBody CustomerDto customerDto) {
-        CustomerDto savedCustomer = customerService.save(customerDto);
-        HttpHeaders headers = new HttpHeaders();
+        val savedCustomer = customerService.save(customerDto);
+        val headers = new HttpHeaders();
         headers.add("Location", "/api/v1/customer/" + savedCustomer.getId());
         return new ResponseEntity<>(headers, HttpStatus.CREATED);
     }
